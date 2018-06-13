@@ -28,7 +28,10 @@ namespace ProyectoSenales
             Configuracion.frecA[0] = int.Parse(letraAPrimerInf.Text);
             Configuracion.frecA[1] = int.Parse(letraAPrimerSup.Text);
             Configuracion.frecA[2] = int.Parse(letraASegundoInf.Text);
-            Configuracion.frecA[3] = int.Parse(letraASegundoSup.Text);            
+            Configuracion.frecA[3] = int.Parse(letraASegundoSup.Text);
+
+            Configuracion.puertoCOM = puertoTextBox.Text;
+            this.Close();
         }
     }
 }
