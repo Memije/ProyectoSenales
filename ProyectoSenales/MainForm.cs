@@ -22,7 +22,7 @@ namespace ProyectoSenales
 
         private Random random = new Random();
 
-        SerialPort port = new SerialPort("COM3");
+        SerialPort port = new SerialPort(Configuracion.puertoCOM);
         // SerialPort fakePort = new SerialPort("COM2");               
 
         public MainForm()
