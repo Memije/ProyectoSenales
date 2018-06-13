@@ -15,19 +15,20 @@ using System.Diagnostics;
 
 namespace ProyectoSenales
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
 
         private const int NUMERO_MUESTRAS = 4096;//4096;
 
         private Random random = new Random();
 
-        SerialPort port = new SerialPort("COM3");        
-        // SerialPort fakePort = new SerialPort("COM2");
+        SerialPort port = new SerialPort("COM3");
+        // SerialPort fakePort = new SerialPort("COM2");               
 
-        public Form1()
+        public MainForm()
         {
-            InitializeComponent();
+            InitializeComponent();            
+
             // Permite modificar los componentes desde hilos separados
             CheckForIllegalCrossThreadCalls = false;
             // Remueve el label del chart
@@ -41,6 +42,7 @@ namespace ProyectoSenales
             port.BaudRate = 115200;
 
             port.NewLine = "\n";
+            
         }
       
         private void button1_Click(object sender, EventArgs e)
@@ -134,6 +136,12 @@ namespace ProyectoSenales
             }
 
             //muestrasList.ForEach(Console.WriteLine);
+        }
+
+        private void establecerFrecuenciasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConfigurationForm configForm = new ConfigurationForm();            
+            configForm.ShowDialog();            
         }
     }
 }
