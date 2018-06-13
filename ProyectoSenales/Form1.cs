@@ -18,12 +18,12 @@ namespace ProyectoSenales
     public partial class Form1 : Form
     {
 
-        private const int NUMERO_MUESTRAS = 16384;
+        private const int NUMERO_MUESTRAS = 4096;//4096;
 
         private Random random = new Random();
 
-        SerialPort port = new SerialPort("COM3");
-        SerialPort fakePort = new SerialPort("COM2");
+        SerialPort port = new SerialPort("COM3");        
+        // SerialPort fakePort = new SerialPort("COM2");
 
         public Form1()
         {
@@ -32,8 +32,15 @@ namespace ProyectoSenales
             CheckForIllegalCrossThreadCalls = false;
             // Remueve el label del chart
             testChart.Series["datos"].IsVisibleInLegend = false;
+            testChart.ChartAreas[0].CursorX.IsUserEnabled = true;
+            testChart.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+            testChart.ChartAreas[0].CursorY.IsUserEnabled = true;
             // Se establece el maximo valor para la barra de progreso
             grabacionProgressBar.Maximum = NUMERO_MUESTRAS;
+
+            port.BaudRate = 115200;
+
+            port.NewLine = "\n";
         }
       
         private void button1_Click(object sender, EventArgs e)
@@ -48,29 +55,35 @@ namespace ProyectoSenales
             // Borra las series anteriores de la grafica (si existen)
             testChart.Series["datos"].Points.Clear();
 
-            Thread fakeInfo = new Thread(()=>
+            /*Thread fakeInfo = new Thread(()=>
             {
                 while (true)
                 {
                     fakePort.Write($"{random.Next(0, 1024)}\n");
                 }                
-            });
+            });*/
 
             // Creacion del hilo de muestreo
             Thread thread = new Thread(()=>
             {
-                fakeInfo.Start();
-                for (int muestras = 0; muestras < NUMERO_MUESTRAS; muestras++)
-                {
+                // fakeInfo.Start();
+                int muestras = 0;
+                while (muestras < NUMERO_MUESTRAS)
+                {                
                     // Añadir un punto con los valores recibidos
                     // muestras va de 0 a NUMERO_MUESTRAS
                     // TODO: reemplazar random con lectura de arduino
-                    string var = port.ReadLine();                    
-                    Console.WriteLine(var);
-                    muestrasArray[muestras] = new Muestra(muestras, Math.Sin(muestras));
-                    // muestrasList.Add(new Muestra(muestras, Math.Sin(muestras) /*random.Next(0, 1024)*/));
-                    // Incrementar el valor del progreso                    
-                    grabacionProgressBar.Value++;
+                    string var = port.ReadLine();
+                    if (Double.TryParse(var, out double varDouble))
+                    {
+                        Console.WriteLine(varDouble);
+                        Console.WriteLine(Double.Parse(var.Trim()));
+                        muestrasArray[muestras] = new Muestra(muestras, varDouble);
+                        // muestrasList.Add(new Muestra(muestras, Math.Sin(muestras) /*random.Next(0, 1024)*/));
+                        // Incrementar el valor del progreso                    
+                        grabacionProgressBar.Value++;
+                        muestras++;
+                    }                                        
                 }
                 // Borra el progreso
                 grabacionProgressBar.Value = 0;
@@ -80,8 +93,8 @@ namespace ProyectoSenales
 
             // Empezar el hilo
             Stopwatch stopwatch = new Stopwatch();
-            fakePort.Open();
-           port.Open();            
+            // fakePort.Open();
+            port.Open();            
             stopwatch.Start();            
             thread.Start();            
             // Esperar hasta que el hilo acabe
@@ -90,7 +103,7 @@ namespace ProyectoSenales
             port.Close();
             Console.WriteLine(stopwatch.Elapsed);
 
-            //startButton.Enabled = true;            
+            startButton.Enabled = true;            
 
             Complex[] com_array = new Complex[muestrasArray.Length];
 
@@ -103,13 +116,21 @@ namespace ProyectoSenales
 
             for (int i = 0; i < com_array.Length; i++)
             {
-                muestrasArray[i].complejo = com_array[i];
-                testChart.Series["datos"].Points.AddXY(i, com_array[i].Magnitude);
+                if (i == 0)
+                {
+                    muestrasArray[i].complejo = 0.0;
+                    testChart.Series["datos"].Points.AddXY(i, 0.0);
+                }
+                else
+                {
+                    muestrasArray[i].complejo = com_array[i];
+                    testChart.Series["datos"].Points.AddXY(i, com_array[i].Magnitude);
+                }                
             }
             
             foreach (Complex complejo in com_array)
             {
-                Console.WriteLine(complejo.Magnitude);
+                // Console.WriteLine(complejo.Magnitude);
             }
 
             //muestrasList.ForEach(Console.WriteLine);
