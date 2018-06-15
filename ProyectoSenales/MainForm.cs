@@ -18,12 +18,12 @@ namespace ProyectoSenales
     public partial class MainForm : Form
     {
 
-        private const int NUMERO_MUESTRAS = 4096;//4096;
+        private const int NUMERO_MUESTRAS = 4096;
 
         private Random random = new Random();
 
         SerialPort port = new SerialPort(Configuracion.puertoCOM);
-        // SerialPort fakePort = new SerialPort("COM2");               
+        SerialPort fakePort = new SerialPort("COM2");               
 
         public MainForm()
         {
@@ -57,13 +57,13 @@ namespace ProyectoSenales
             // Borra las series anteriores de la grafica (si existen)
             testChart.Series["datos"].Points.Clear();
 
-            /*Thread fakeInfo = new Thread(()=>
+            Thread fakeInfo = new Thread(()=>
             {
                 while (true)
                 {
                     fakePort.Write($"{random.Next(0, 1024)}\n");
                 }                
-            });*/
+            });
 
             // Creacion del hilo de muestreo
             Thread thread = new Thread(()=>
@@ -95,9 +95,10 @@ namespace ProyectoSenales
 
             // Empezar el hilo
             Stopwatch stopwatch = new Stopwatch();
-            // fakePort.Open();
+            fakePort.Open();
             port.Open();            
-            stopwatch.Start();            
+            stopwatch.Start();
+            fakeInfo.Start();
             thread.Start();            
             // Esperar hasta que el hilo acabe
             thread.Join();
@@ -118,30 +119,32 @@ namespace ProyectoSenales
 
             for (int i = 0; i < com_array.Length; i++)
             {
-                if (i == 0)
+                com_array[i] = i == 0 ? 0 : com_array[i];                
+                muestrasArray[i].complejo = com_array[i];
+                testChart.Series["datos"].Points.AddXY(i, com_array[i].Magnitude);                
+            }
+
+            int max_index1 = 0;
+            double max_amp1 = 0;
+            int max_index2 = 0;
+            double max_amp2 = 0;
+            for (int i = 0; i < com_array.Length / 2; i++)
+            {
+                if (com_array[i].Magnitude > max_amp1)
                 {
-                    muestrasArray[i].complejo = 0.0;
-                    testChart.Series["datos"].Points.AddXY(i, 0.0);
-                }
-                else
-                {
-                    muestrasArray[i].complejo = com_array[i];
-                    testChart.Series["datos"].Points.AddXY(i, com_array[i].Magnitude);
+                    max_index1 = i;
+                    max_amp1 = com_array[i].Magnitude;                    
                 }                
             }
-            
-            foreach (Complex complejo in com_array)
+            for (int i = com_array.Length / 2; i < com_array.Length ; i++)
             {
-                // Console.WriteLine(complejo.Magnitude);
+                if (com_array[i].Magnitude > max_amp2 && (float) com_array[i].Magnitude != (float) max_amp1)
+                {
+                    max_index2 = i;
+                    max_amp2 = com_array[i].Magnitude;
+                }
             }
-
-            //muestrasList.ForEach(Console.WriteLine);
-        }
-
-        private void establecerFrecuenciasToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ConfigurationForm configForm = new ConfigurationForm();            
-            configForm.ShowDialog();            
-        }
+            Console.WriteLine($"[{max_index1},{max_amp1}],[{max_index2},{max_amp2}]");
+        }       
     }
 }
