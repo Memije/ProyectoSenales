@@ -103,15 +103,12 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Género";
             // 
-            // generoPictureBox
-            // 
             this.generoPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.generoPictureBox.Location = new System.Drawing.Point(6, 19);
             this.generoPictureBox.Name = "generoPictureBox";
             this.generoPictureBox.Size = new System.Drawing.Size(279, 174);
             this.generoPictureBox.TabIndex = 0;
             this.generoPictureBox.TabStop = false;
-            // 
             // startButton
             // 
             this.startButton.FlatAppearance.BorderSize = 0;
@@ -136,7 +133,6 @@
             this.vocalPictureBox.Size = new System.Drawing.Size(279, 174);
             this.vocalPictureBox.TabIndex = 0;
             this.vocalPictureBox.TabStop = false;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -156,6 +152,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.generoPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vocalPictureBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

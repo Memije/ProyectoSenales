@@ -144,6 +144,7 @@ namespace ProyectoSenales
                     max_amp2 = com_array[i].Magnitude;
                 }
             }
+
             if (1 == 1)
             {
                 vocalPictureBox.BackgroundImage = Properties.Resources.a;
