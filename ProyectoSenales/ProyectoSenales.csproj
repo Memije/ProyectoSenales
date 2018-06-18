@@ -137,5 +137,26 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="images\a.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\e.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\i.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\o.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\u.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\female.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\male.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

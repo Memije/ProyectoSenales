@@ -136,7 +136,7 @@ namespace ProyectoSenales
                     max_amp1 = com_array[i].Magnitude;                    
                 }                
             }
-            for (int i = com_array.Length / 2; i < com_array.Length ; i++)
+            for (int i = 0; i < com_array.Length / 2; i++)
             {
                 if (com_array[i].Magnitude > max_amp2 && (float) com_array[i].Magnitude != (float) max_amp1)
                 {
@@ -144,6 +144,11 @@ namespace ProyectoSenales
                     max_amp2 = com_array[i].Magnitude;
                 }
             }
+            if (1 == 1)
+            {
+                vocalPictureBox.BackgroundImage = Properties.Resources.a;
+                generoPictureBox.BackgroundImage = Properties.Resources.male;
+            }            
             Console.WriteLine($"[{max_index1},{max_amp1}],[{max_index2},{max_amp2}]");
         }       
     }
