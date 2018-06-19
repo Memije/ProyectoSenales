@@ -14,7 +14,7 @@ namespace ProyectoSenales
         public static int[] frecO = { 200, 400, 1000, 1100 };
         public static int[] frecU = { 300, 400, 1000, 1100 };
 
-        public static double[] amplitud = { 0.0, 0.0 };
+        public static double amplitud = 0.0;
 
         public static string puertoCOM = "COM3";
     }

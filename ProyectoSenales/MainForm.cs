@@ -181,10 +181,13 @@ namespace ProyectoSenales
                 vocalPictureBox.BackgroundImage = Properties.Resources.u;
             }
 
-            if (1 == 1)
-            {
-                
+            if (max_amp1 > Configuracion.amplitud)
+            {                
                 generoPictureBox.BackgroundImage = Properties.Resources.male;
+            }
+            else
+            {
+                generoPictureBox.BackgroundImage = Properties.Resources.female;
             }            
             Console.WriteLine($"[{max_index1},{max_amp1}],[{max_index2},{max_amp2}]");
         }       
