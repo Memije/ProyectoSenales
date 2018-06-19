@@ -47,6 +47,10 @@ namespace ProyectoSenales
       
         private void button1_Click(object sender, EventArgs e)
         {
+
+            vocalPictureBox.BackgroundImage = null;
+            generoPictureBox.BackgroundImage = null;
+
             // Crea una lista de muestras con los valores de las muestras
             Muestra[] muestrasArray = new Muestra[NUMERO_MUESTRAS];
             // List<Muestra> muestrasList = new List<Muestra>();
@@ -78,8 +82,8 @@ namespace ProyectoSenales
                     string var = port.ReadLine();
                     if (Double.TryParse(var, out double varDouble))
                     {
-                        Console.WriteLine(varDouble);
-                        Console.WriteLine(Double.Parse(var.Trim()));
+                        //Console.WriteLine(varDouble);
+                        //Console.WriteLine(Double.Parse(var.Trim()));
                         muestrasArray[muestras] = new Muestra(muestras, varDouble);
                         // muestrasList.Add(new Muestra(muestras, Math.Sin(muestras) /*random.Next(0, 1024)*/));
                         // Incrementar el valor del progreso                    
@@ -95,10 +99,10 @@ namespace ProyectoSenales
 
             // Empezar el hilo
             Stopwatch stopwatch = new Stopwatch();
-            fakePort.Open();
+            // fakePort.Open();
             port.Open();            
             stopwatch.Start();
-            fakeInfo.Start();
+            // fakeInfo.Start();
             thread.Start();            
             // Esperar hasta que el hilo acabe
             thread.Join();
@@ -115,9 +119,10 @@ namespace ProyectoSenales
                 com_array[i] = muestrasArray[i].complejo;
             }
 
+            // com_array = FFT.DFT(com_array);
             FFT.FFT_Calc(com_array);
 
-            for (int i = 0; i < com_array.Length; i++)
+            for (int i = 0; i < com_array.Length / 2; i++)
             {
                 com_array[i] = i == 0 ? 0 : com_array[i];                
                 muestrasArray[i].complejo = com_array[i];
@@ -138,16 +143,47 @@ namespace ProyectoSenales
             }
             for (int i = 0; i < com_array.Length / 2; i++)
             {
-                if (com_array[i].Magnitude > max_amp2 && (float) com_array[i].Magnitude != (float) max_amp1)
+                if (i < max_index1 - 75.00f || i > max_index1+ 75.0f)
                 {
-                    max_index2 = i;
-                    max_amp2 = com_array[i].Magnitude;
-                }
+                    if (com_array[i].Magnitude > max_amp2 && ((float)com_array[i].Magnitude != (float)max_amp1))
+                    {
+                        max_index2 = i;
+                        max_amp2 = com_array[i].Magnitude;
+                    }
+                }                
+            }
+
+            if (max_index2 < max_index1)
+            {
+                var aux = max_index1;
+                max_index1 = max_index2;
+                max_index2 = aux;
+            }
+
+            if (max_index1 > Configuracion.frecA[0] && max_index1 < Configuracion.frecA[1] && max_index2 > Configuracion.frecA[2] && max_index2 < Configuracion.frecA[3])
+            {
+                vocalPictureBox.BackgroundImage = Properties.Resources.a;
+            }
+            else if (max_index1 > Configuracion.frecE[0] && max_index1 < Configuracion.frecE[1] && max_index2 > Configuracion.frecE[2] && max_index2 < Configuracion.frecE[3])
+            {
+                vocalPictureBox.BackgroundImage = Properties.Resources.e;
+            }
+            else if (max_index1 > Configuracion.frecI[0] && max_index1 < Configuracion.frecI[1] && max_index2 > Configuracion.frecI[2] && max_index2 < Configuracion.frecI[3])
+            {
+                vocalPictureBox.BackgroundImage = Properties.Resources.i;
+            }
+            else if (max_index1 > Configuracion.frecO[0] && max_index1 < Configuracion.frecO[1] && max_index2 > Configuracion.frecO[2] && max_index2 < Configuracion.frecO[3])
+            {
+                vocalPictureBox.BackgroundImage = Properties.Resources.o;
+            }
+            else if (max_index1 > Configuracion.frecU[0] && max_index1 < Configuracion.frecU[1] && max_index2 > Configuracion.frecU[2] && max_index2 < Configuracion.frecU[3])
+            {
+                vocalPictureBox.BackgroundImage = Properties.Resources.u;
             }
 
             if (1 == 1)
             {
-                vocalPictureBox.BackgroundImage = Properties.Resources.a;
+                
                 generoPictureBox.BackgroundImage = Properties.Resources.male;
             }            
             Console.WriteLine($"[{max_index1},{max_amp1}],[{max_index2},{max_amp2}]");
