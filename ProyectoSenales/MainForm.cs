@@ -39,7 +39,7 @@ namespace ProyectoSenales
             // Se establece el maximo valor para la barra de progreso
             grabacionProgressBar.Maximum = NUMERO_MUESTRAS;
 
-            port.BaudRate = 115200;
+            port.BaudRate = 2000000;
 
             port.NewLine = "\n";
             
